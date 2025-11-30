@@ -8,13 +8,6 @@ Use it only for learning or on systems you’re allowed to test. flaws, and pote
 
 #### Note: I am a cybersecurity student sharing this project in case it is useful to other students or professionals.
 
-- Scans for misconfigurations that could let someone escalate privileges
-- Searches for credentials and secrets buried in files
-- Lets you filter by file type
-- Uses colors to make results easier to read
-- Built to be modular, so you can add your own stuff
-
-
 ## Usage
 
 ```powershell
