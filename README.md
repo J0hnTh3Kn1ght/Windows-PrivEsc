@@ -1,36 +1,70 @@
-<center><img src="Images/WindowsHacking.png"></center>
+## Windows Hacking (Privilege Escalation Scanner)
 
-<div>
-    <img src="https://img.shields.io/badge/Language%20-Powershell, Python-darkblue.svg" style="max-width: 100%;">
-    <img src="https://img.shields.io/badge/Target OS%20-Windows-blue.svg" style="max-width: 100%;">
-    <img src="https://img.shields.io/badge/Contents%20-Privilege Escalation, Writeups, Vulnerabilities, Techniques, Bypass-beige.svg" style="max-width: 100%;">
-    <img src="https://img.shields.io/badge/License%20-The Unlicense-lightgreen.svg" style="max-width: 100%;">
-    <img src="https://img.shields.io/badge/Type%20-Information content, automations-darkred.svg" style="max-width: 100%;">
-    
-</div></br>
+PowerEnum/PyEnum is a PowerShell/Python script that helps you quickly spot possible ways to escalate privileges on a Windows machine. It's inspired by tools like PEASS-ng and guides like HackTricks. The goal is to find common misconfigurations, weak permissions, and sensitive data that could be exploited.
+
+Use it only for learning or on systems you’re allowed to test. flaws, and potentially sensitive data across a Windows host.
+
+⚠️ It is intended for educational and authorized penetration testing purposes only.
+
+#### Note: I am a cybersecurity student sharing this project in case it is useful to other students or professionals.
+
+- Scans for misconfigurations that could let someone escalate privileges
+- Searches for credentials and secrets buried in files
+- Lets you filter by file type
+- Uses colors to make results easier to read
+- Built to be modular, so you can add your own stuff
 
 
-# Windows Hacking (Privilege Escalation Techniques)
+## Usage
 
-- My study of privilege escalation on Windows systems and other techniques I've learned along the way inspired this work.
+```powershell
+# Run a default scan
+.\Scanner
 
-This repository serves as a database for my studies and scripts related to the Windows environment in offensive cybersecurity. Over time, I may be interested in adding Blue Team content.
-Please feel free to use any useful content, including the scripts, which can be modified to suit your needs.
+# Look for saved passwords or usernames
+.\Scanner -LookForCredentials
 
-I am a cybersecurity student sharing this project in case it is useful to other students or professionals.
+# Search specific file types
+.\Scanner -LookForCredentials -Extensions ".txt,.xml"
 
-## Contents:
+# Just search for certain file extensions
+.\Scanner -Searchfiles -Extensions ".docx,.ini"
 
-#### (🕓 Coming Soon) - Detailed manual of verification/vulnerability processes and how to find privilege escalation points on windows systems
-#### (🕓 Coming Soon) - My Recommendation of vulnerable machines for training and access links to .OVA/.ISO
-#### (🕓 Coming Soon) - Writeups (As I solve and accumulate the CTFs of windows machines)
+# Need help?
+.\Scanner -h/-help
+```
 
-## Working on:
+## How It Works
 
-- ✏️ Writing and assembling the article on my studies of privilege escalation in windows systems, which will be the next item on the list of contents in this repository
-- ✏️ Playing CTFs involving Windows machines and gathering relevant information to be presented here in Writeups format
+The script checks a few common ways attackers try to escalate privileges:
 
-##
+### Filesystem and Drive Scanning
+
+- Checking Files and Drives
+- Looks for files that might have passwords or secrets using keywords.
+- Scans for extensions like `.txt`, `.xml`, `.config`
+- Tries to spot things like:
+  - `password`, `secret`, `token`, `api_key`, `username`
+  - Regex-based matching to identify hardcoded credentials and tokens.
+
+### Registry and Service Misconfigurations
+
+- Detects possible misconfigurations that may be exploited by attackers, such as:
+  - Weak registry permissions
+  - Services with unquoted paths
+  - Auto-run registry keys
+
+### Local User and Group Enumeration
+
+- Checks current user privileges
+- Looks for users in admin groups they probably shouldn’t be in
+
+### Script Injection and Auto-Elevated Binaries
+
+- Highlights potentially injectable paths
+- Looks for binaries or scripts run by higher-privilege users
+
+---------------------------------------------
 
 > ⚠️ **Disclaimer**
 >
