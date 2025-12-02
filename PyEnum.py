@@ -40,7 +40,6 @@ class Colors:
 
 
 def write_color(text, color=Colors.WHITE):
-    # -> Print colored text
     print(f"{color}{text}{Colors.RESET}", end='')
 
 
@@ -49,7 +48,6 @@ def print_separator():
 
 
 def search_files_for_sensitive_data(look_for_credentials=False, extensions=None):
-    # -> Search files for sensitive data like passwords and usernames
     
     if extensions and ',' in extensions:
         extensions = [ext.strip() for ext in extensions.split(',')]
@@ -95,7 +93,6 @@ def search_files_for_sensitive_data(look_for_credentials=False, extensions=None)
     max_lines = 40
     max_line_length = 300
     
-    #-> Get all drives
     drives = [f"{chr(i)}:\\" for i in range(ord('A'), ord('Z')+1) if os.path.exists(f"{chr(i)}:\\")]
     
     for drive in drives:
@@ -144,7 +141,6 @@ def search_files_for_sensitive_data(look_for_credentials=False, extensions=None)
 
 
 def search_files_by_extension(extensions):
-    # -> Search for files by extension
     
     if not extensions:
         write_color("You must specify extensions when using search files.\n", Colors.RED)
@@ -179,7 +175,6 @@ def search_files_by_extension(extensions):
 
 
 def get_clipboard_content():
-    # -> Get clipboard content (Windows only)
     
     try:
         import tkinter as tk
@@ -199,7 +194,6 @@ def get_clipboard_content():
 
 
 def get_antivirus_product():
-    # -> Get antivirus information using WMI
     
     try:
         import wmi
@@ -245,7 +239,6 @@ def get_antivirus_product():
 
 
 def check_hotfixes():
-    # -> List installed hotfixes
     
     try:
         result = subprocess.run(['wmic', 'qfe', 'get', 'HotFixID,InstalledOn', '/format:csv'], 
@@ -269,7 +262,6 @@ def check_hotfixes():
 
 
 def check_registry_key(key_path, key_name):
-    # -> Check if registry key is enabled
     
     try:
         if key_path.startswith('HKLM'):
@@ -309,7 +301,6 @@ def check_registry_key(key_path, key_name):
 
 
 def check_lsa():
-    # -> Check LSA protection
     
     try:
         with winreg.OpenKey(winreg.HKEY_LOCAL_MACHINE, 
@@ -336,7 +327,6 @@ def check_lsa():
 
 
 def check_uac_settings():
-    # -> Check UAC settings
 
     try:
         with winreg.OpenKey(winreg.HKEY_LOCAL_MACHINE, r"SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System") as key:
@@ -352,7 +342,6 @@ def check_uac_settings():
 
 
 def check_laps_and_credential_guard():
-    # -> Check LAPS and Credential Guard
 
     try:
         with winreg.OpenKey(winreg.HKEY_LOCAL_MACHINE, r"SYSTEM\CurrentControlSet\Control\LSA") as key:
@@ -373,7 +362,6 @@ def check_laps_and_credential_guard():
     except Exception as e:
         write_color(f"Could not access LSA registry key (LsaCfgFlags): {e}\n", Colors.RED)
 
-    #-> Check LAPS
     
     write_color("\nLAPS (Local Admin Password Solution) Check: ", Colors.YELLOW)
     laps_paths = [
@@ -405,7 +393,6 @@ def check_laps_and_credential_guard():
 
 
 def get_installed_applications():
-    # -> Get installed applications from registry
 
     apps = []
     
@@ -476,7 +463,6 @@ def get_installed_applications():
 
 
 def get_recently_run_commands():
-    # -> Get recently run commands from various sources
     
     write_color("\nHKCU recent commands: ", Colors.BLUE)
     
@@ -568,14 +554,12 @@ def get_recently_run_commands():
 
 
 def check_permissions(target):
-    # -> Check permissions on a target path
 
     if not os.path.exists(target):
         write_color(f"Path not found: {target}\n", Colors.RED)
         return
     
     try:
-        #-> Basic permission check - try to write
         if os.path.isdir(target):
             test_file = os.path.join(target, "test_write_permission.tmp")
             
@@ -593,7 +577,6 @@ def check_permissions(target):
             except:
                 pass
         
-        #-> For files, check if we can modify
         if os.path.isfile(target):
             
             if os.access(target, os.W_OK):
@@ -665,7 +648,6 @@ def check_scheduled_tasks_custom():
 
 
 def check_scheduled_tasks_access():
-    # -> Check access to scheduled tasks
     
     tasks_path = r"C:\Windows\System32\Tasks"
     
@@ -684,13 +666,12 @@ def check_scheduled_tasks_access():
 
 
 def get_process_info():
-    # -> Get process information and check permissions
 
     try:
         result = subprocess.run(['wmic', 'process', 'get', 'ExecutablePath', '/format:csv'], capture_output=True, text=True, shell=True)
         
         if result.returncode == 0:
-            lines = result.stdout.strip().split('\n')[1:]  # Skip header
+            lines = result.stdout.strip().split('\n')[1:]
             process_paths = set()
             
             for line in lines:
@@ -716,7 +697,6 @@ def get_process_info():
 
 
 def check_values(value, label):
-    # -> Check and display registry values
 
     if value is None or value == "":
         write_color(f"{label}: No Value has been found!\n", Colors.RED)
@@ -725,7 +705,6 @@ def check_values(value, label):
 
 
 def get_wifi_passwords():
-    # -> Get saved WiFi passwords
     
     try:
         # -> Get WiFi profiles
@@ -785,7 +764,6 @@ def get_smb_shares():
 def get_smb_share_permissions():
     
     try:
-        # -> 'net share' provides share names; we try to get permissions via icacls
     
         result = subprocess.run(['net', 'share'], capture_output=True, text=True, shell=True)
         if result.returncode != 0:
